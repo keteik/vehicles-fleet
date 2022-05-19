@@ -53,7 +53,7 @@ export class VehicleController {
 
         const vehicleId: string = req.body.uuid
 
-        if(!vehicleId){
+        if(!(vehicleId)){
             return res.status(400).send("Invaid input!");
         }
 

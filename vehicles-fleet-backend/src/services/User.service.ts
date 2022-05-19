@@ -1,9 +1,13 @@
-import {getManager, UpdateResult} from "typeorm";
+import {DeleteResult, UpdateResult} from "typeorm";
 import { User } from "../entity/User";
 
-export class UserService {
+class UserService {
 
     constructor() {};
+
+    getAllUsers(): Promise<User []> {
+        return User.find();
+    }
 
     getUserById(uuid: string): Promise<User | undefined>{
         return User.findOne({
@@ -24,4 +28,10 @@ export class UserService {
     updateUserById(uuid: string, value: Object): Promise<UpdateResult> {
         return User.update({ uuid: uuid }, value);
     }
+
+    deleteUser(uuid: string): Promise<DeleteResult> {
+        return User.delete( {uuid: uuid} );
+    }
 }
+
+export default new UserService();

@@ -12,6 +12,8 @@ export class Auth {
 
     verifyToken(req: Request, res: Response, next: NextFunction): void {
         const bearerHeader: string | undefined = req.headers['authorization'];
+        if(res.locals.skip)
+            next();
 
         if(!bearerHeader) {
             res.status(403).send("Not authenticated");

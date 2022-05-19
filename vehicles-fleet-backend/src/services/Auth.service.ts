@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-export class AuthService {
+class AuthService {
     constructor() {};
 
     generateToken(uuid: string): string {
@@ -26,5 +26,6 @@ export class AuthService {
                 }
             );
     }
-
 }
+
+export default new AuthService();

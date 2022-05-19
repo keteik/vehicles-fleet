@@ -1,25 +1,16 @@
-import {Request, Response} from "express";
-import { AuthController } from "../controller/Auth.controller";
-const express = require("express");
+import { UserController } from "../controllers/User.controller"
+import { Auth } from '../middleware/Auth';
 
+const express = require('express');
 const userRouter = express.Router();
-const authController = new AuthController();
 
-userRouter.post('/register', (req: Request, res: Response): Promise<Response> => {
-    return authController.registerUser(req, res);
-});
-
-userRouter.post('/login', (req: Request, res: Response): Promise<Response> => {
-    return authController.loginUser(req, res);
-});
-
-userRouter.post('/token', (req: Request, res: Response): Promise<Response> => {
-    return authController.refreshToken(req, res);
-});
-
-userRouter.post('/checkEmail', (req: Request, res: Response): Promise<Response> => {
-    return authController.checkEmailIsFree(req, res);
-});
+const userController = new UserController();
+const auth = new Auth();
+userRouter
+.get('/', userController.getUsers)
+.get('/:id', userController.getUser)
+.post('/', userController.createUser)
+.put('/:id', userController.updateUser)
+.delete('/:id', userController.deleteUser);
 
 module.exports = userRouter;
-

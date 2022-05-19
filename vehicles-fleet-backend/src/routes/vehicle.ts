@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { VehicleController } from "../controller/Vehicle.controller";
+import { VehicleController } from "../controllers/Vehicle.controller";
 
 
 const express = require('express');
