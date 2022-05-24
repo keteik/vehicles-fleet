@@ -1,85 +1,95 @@
 import { Request, Response } from "express";
 import { DeleteResult, UpdateResult } from "typeorm";
 import { Vehice } from "../entity/Vehicle";
-import { VehiceService } from "../services/Vehicle.service";
+import  vehicleService  from "../services/Vehicle.service";
 
 const uuid = require('uuid');
 
 export class VehicleController {
-    private vehicleService: VehiceService;
 
-    constructor() {
-        this.vehicleService = new VehiceService();
-    };
+    async getVehicles(req: Request, res: Response): Promise<Response> {
+        try{
+            const vehicles: Vehice[] = await vehicleService.getAllVehicles();
+
+            return res.status(200).send({ status: "success", data: vehicles });
+        } catch(err) {
+            return res.status(500).send({ status: "failed", err});
+        }
+    }
+
+    async getVehicle(req: Request, res: Response): Promise<Response> {
+        const id: string = req.params.id;
+        if(!id) {
+            return res.status(400).send( {status: "failed", message: "User id not specified"} );
+        }
+
+        try {
+            const vehicle: Vehice | undefined = await vehicleService.getVehicleById(id);
+            if(!vehicle)
+                return res.status(404).send( {status: "failed", message: "User not found"} ); 
+            
+            return res.status(200).send( {status: "success", vehicle} );
+        } catch(err) {
+            return res.status(500).send( {status: "failed", err} );
+        }
+    }
 
     async createVehicle(req: Request, res: Response): Promise<Response> {
         const vehicleBody: Vehice = req.body;
-
-        if(!(vehicleBody.type && vehicleBody.brand && vehicleBody.model && vehicleBody.sweptVolume &&  
-                    vehicleBody.insuranceDate &&  vehicleBody.technicalExaminationDate)) {
-            return res.status(400).send("Invaid input!");
+        
+        const checkVehicleBody = vehicleBody.type && vehicleBody.brand && vehicleBody.model && vehicleBody.sweptVolume &&
+            vehicleBody.insuranceDate && vehicleBody.technicalExaminationDate;
+        
+            if(!checkVehicleBody){
+            return res.status(400).send( {status: "failed", message: "Invaid input!"} );
         }
 
         vehicleBody.uuid = uuid.v4();
 
         try {
-            const newVehicle = await this.vehicleService.saveVehicle(vehicleBody);
+            const newVehicle = await vehicleService.saveVehicle(vehicleBody);
             
-            return res.status(201).send(newVehicle);
+            return res.status(201).send( {status: "success", data: newVehicle});
         } catch(err) {
-            return res.status(500).send(err);
-        }
-    }
-
-    async getVehicles(req: Request, res: Response): Promise<Response> {
-        try{
-            const vehicles: Vehice[] = await this.vehicleService.getAllVehicles();
-
-            return res.status(200).send(vehicles);
-        } catch(err) {
-            return res.status(500).send(err);
+            return res.status(500).send( {status: "failed", err} );
         }
     }
 
     async updateVehicle(req: Request, res:Response): Promise<Response> {
-        const vehicleBody: {
-            type: string;
-            brand: string;
-            model: string;
-            sweptVolume: string;
-            insuranteDate: Date;
-            technicalExaminationDate: Date
-        } = req.body;
-
-        const vehicleId: string = req.body.uuid
-
-        if(!(vehicleId)){
-            return res.status(400).send("Invaid input!");
+        const vehicleId: string = req.params.id;
+        if(!vehicleId){
+            return res.status(400).send( {status: "failed", message: "User id not specified"} );
         }
 
-        try {
-            const updatedVehicle: UpdateResult = await this.vehicleService.updateVehiceById(vehicleId, vehicleBody);
+        const vehicleBody: Vehice = req.body;
+        const checkVehicleBody = vehicleBody.type || vehicleBody.brand || vehicleBody.model || vehicleBody.sweptVolume ||
+            vehicleBody.insuranceDate || vehicleBody.technicalExaminationDate;
 
-            return res.status(200).send(updatedVehicle);
+         if(!(checkVehicleBody)){
+            return res.status(400).send( {status: "failed", message: "Invaid input!"} );
+         }
+
+        try {
+            await vehicleService.updateVehiceById(vehicleId, vehicleBody);
+
+            return res.status(200).send( {status: "success"} );
         } catch(err) {
-            return res.status(500).send(err);
+            return res.status(500).send( {status: "failed", err} );
         }
     }
 
     async deleteVehicle(req: Request, res: Response): Promise<Response> {
-        const vehicleId: string = req.body.uuid;
-
-        if(!vehicleId) {
-            res.status(400).send("Invalid input!");
+        const vehicleId: string = req.params.id;
+        if(!vehicleId){
+            return res.status(400).send( {status: "failed", message: "User id not specified"} );
         }
 
         try {
-            const deletedVehicle: DeleteResult = await this.vehicleService.deleteVehicle(vehicleId);
+            await vehicleService.deleteVehicle(vehicleId);
         
-            return res.status(200).send(deletedVehicle);
+            return res.status(200).send( {status: "success"} );
         } catch(err) {
             return res.status(500).send(err);
         }
     }
 }
-

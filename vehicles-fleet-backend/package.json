@@ -20,10 +20,10 @@
       "uuid": "^8.3.2"
    },
    "scripts": {
-      "start": "ts-node src/index.ts",
+      "start": "ts-node src/app.ts",
       "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js",
-      "dev": "nodemon --exec ./node_modules/.bin/ts-node src/index.ts",
-      "build": "rm -r build && tsc",
-      "prod": "set NODE_ENV=prod&& node ./build/index.js"
+      "dev": "nodemon --exec ./node_modules/.bin/ts-node src/app.ts",
+      "build":"(node -e \"if (! require('fs').existsSync('./build')){process.exit(1)} \" || mkdir build) && rm -r build && tsc",
+      "prod": "set NODE_ENV=prod&& node ./build/app.js"
    }
 }

@@ -8,7 +8,9 @@ const authController = new AuthController();
 const userController = new UserController();
 
 userRouter.post('/login/', authController.loginUser);
+
 userRouter.post('/register/', userController.createUser);
+
 userRouter.post('/token', authController.refreshToken);
 
 module.exports = userRouter;

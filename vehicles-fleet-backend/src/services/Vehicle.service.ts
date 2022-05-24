@@ -1,7 +1,7 @@
 import { DeleteResult, UpdateResult } from "typeorm";
 import { Vehice } from "../entity/Vehicle";
 
-export class VehiceService {
+class VehiceService {
 
     constructor() {};
 
@@ -13,7 +13,7 @@ export class VehiceService {
         return Vehice.find();
     }
 
-    getVehicleById(uuid: number): Promise<Vehice | undefined> {
+    getVehicleById(uuid: string): Promise<Vehice | undefined> {
         return Vehice.findOne({
             where: {
                 uuid: uuid
@@ -29,3 +29,5 @@ export class VehiceService {
         return Vehice.delete( {uuid: uuid} );
     }
 }
+
+export default new VehiceService();

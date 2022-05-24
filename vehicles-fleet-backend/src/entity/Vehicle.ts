@@ -25,5 +25,5 @@ export class Vehice extends BaseEntity {
     insuranceDate!: Date;
 
     @Column()
-    technicalExaminationDate!: Date
+    technicalExaminationDate!: Date;
 }

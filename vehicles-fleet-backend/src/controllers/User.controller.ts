@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { User } from "../entity/User";
 import userService  from "../services/User.service";
 import authService from "../services/Auth.service";
-import { DeleteResult, UpdateResult } from "typeorm";
 
 const bcrypt = require("bcrypt");
 const uuid = require("uuid");
@@ -27,16 +26,14 @@ export class UserController {
 
      async getUser(req: Request, res: Response): Promise<Response> {
          const id: string = req.params.id;
-         
          if(!id) {
              return res.status(400).send( {status: "failed", message: "User id not specified"} );
          }
 
          try {
              const user: User | undefined = await userService.getUserById(id);
-
              if(!user) {
-                 res.status(404).send( {status: "failed", message: "User not found"} );
+                 return res.status(404).send( {status: "failed", message: "User not found"} );
              }
 
              return res.status(200).send( {status: "success", user} );
@@ -85,18 +82,11 @@ export class UserController {
 
      async updateUser(req: Request, res: Response): Promise<Response> {
         const id: string = req.params.id;
-        
-        if(!id)
+        if(!id){
             return res.status(400).send( {status: "failed", message: "User id not specified"} );
+        }
 
-        const userBody: {
-            name: string;
-            email: string;
-            password: string
-        } = req.body;
-
-        console.log(userBody);
-
+        const userBody: User = req.body;
         if(!(userBody.email || userBody.name || userBody.password))
             return res.status(400).send( {status: "failed", message: "Invaid input!"} );
 
@@ -111,7 +101,6 @@ export class UserController {
 
     async deleteUser(req: Request, res: Response): Promise<Response> {
         const id: string = req.params.id;
-
         if(!id)
             return res.status(400).send( {status: "failed", message: "User id not spiecified"} );
 
