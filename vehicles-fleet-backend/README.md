@@ -11,8 +11,8 @@
 <p> 
     SECRET=mysecret <br>
     PORT=5000 <br>
-    tokenExpiration=30s <br>
-    refreshTokenExpiration=7d <br> <br>
+    TOKEN_EXPIRATION=30s <br>
+    REFRESH_TOKEN_EXPIRATION=7d <br> <br>
     db_host="127.0.0.1" <br>
     db_port="3306" <br>
     db_username="admin" <br>

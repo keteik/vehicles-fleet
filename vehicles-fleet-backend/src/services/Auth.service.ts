@@ -4,27 +4,19 @@ class AuthService {
     constructor() {};
 
     generateToken(uuid: string): string {
-        return jwt.sign(
-                {
-                    uuid: uuid,
-                },
-                    process.env.SECRET,
-                {
-                    expiresIn: process.env.tokenExpiration
-                }
-            );
+        return jwt.sign({
+            uuid: uuid,
+        }, process.env.SECRET, {
+            expiresIn: process.env.TOKEN_EXPIRATION
+        });
     }
 
     generateRefreshToken(uuid: string): string {
-        return jwt.sign(
-                {
-                    uuid: uuid,
-                },
-                    process.env.SECRET,
-                {
-                    expiresIn: process.env.refreshTokenExpiration
-                }
-            );
+        return jwt.sign({
+            uuid: uuid,
+        }, process.env.SECRET, {
+            expiresIn: process.env.TOKEN_EXPIRATION
+        });
     }
 }
 

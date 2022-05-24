@@ -19,7 +19,7 @@ app.use('/api/v1/user', userRouter);
 app.use('/api/v1/vehicle', vehicleRouter);
 
 createConnection(dbConfing.config).then(async(): Promise<void> => {
-    app.listen(process.env.PORT, () => {
-        console.log(`Server is running at port ${process.env.PORT}...`);
-    })
+    app.listen(process.env.HTTP_PORT, () => {
+        console.log(`HTTP server is running at port ${process.env.HTTP_PORT}!`);
+    });
 }).catch(error => console.log(error));
